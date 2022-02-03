@@ -5,8 +5,8 @@ declare interface VueGamepadOptions {
   buttonInitialTimeout: number;
   buttonRepeatTimeout: number;
   injectClasses: boolean;
-  onGamepadConnected: (...args: any[]) => void;
-  onGamepadDisconnected: (...args: any[]) => void
+  onGamepadConnected?: (...args: any[]) => void;
+  onGamepadDisconnected?: (...args: any[]) => void
 }
 
 declare interface ListenerModifiers {
