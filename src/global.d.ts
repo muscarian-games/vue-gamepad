@@ -1,10 +1,12 @@
 declare interface VueGamepadOptions {
   analogThreshold: number;
-  buttonNames: Array<string>;
+  classPrefix: string;
+  buttonNames: string[];
   buttonInitialTimeout: number;
   buttonRepeatTimeout: number;
   injectClasses: boolean;
-  classPrefix: string;
+  onGamepadConnected: (...args: any[]) => void;
+  onGamepadDisconnected: (...args: any[]) => void
 }
 
 declare interface ListenerModifiers {

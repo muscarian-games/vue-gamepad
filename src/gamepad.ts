@@ -22,6 +22,9 @@ export default function(options: VueGamepadOptions = DefaultOptions) {
        */
       window.addEventListener('gamepadconnected', () => {
         document.body.classList.add(`${options.classPrefix}-connected`);
+        if (options.onGamepadConnected && typeof options.onGamepadConnected === 'function') {
+          options.onGamepadConnected();
+        }
       });
 
       /**
@@ -31,6 +34,9 @@ export default function(options: VueGamepadOptions = DefaultOptions) {
         const gamepads = this.getGamepads();
         if (gamepads.length === 0) {
           document.body.classList.remove(`${options.classPrefix}-connected`);
+        }
+        if (options.onGamepadConnected && typeof options.onGamepadConnected === 'function') {
+          options.onGamepadDisconnected();
         }
       });
 
