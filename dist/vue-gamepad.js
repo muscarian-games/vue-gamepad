@@ -1,6 +1,6 @@
 /*!
  * vue-gamepad v2.0.0-beta.6
- * (c) 2020 Aaron Kirkham <aaron@kirkh.am>
+ * (c) 2022 Aaron Kirkham <aaron@kirkh.am>
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -94,11 +94,17 @@
                 this.vnodeLayers = {};
                 window.addEventListener('gamepadconnected', function () {
                     document.body.classList.add(options.classPrefix + "-connected");
+                    if (typeof options.onGamepadConnected === 'function') {
+                        options.onGamepadConnected();
+                    }
                 });
                 window.addEventListener('gamepaddisconnected', function () {
                     var gamepads = _this.getGamepads();
                     if (gamepads.length === 0) {
                         document.body.classList.remove(options.classPrefix + "-connected");
+                    }
+                    if (typeof options.onGamepadDisconnected === 'function') {
+                        options.onGamepadDisconnected();
                     }
                 });
                 requestAnimationFrame(this.update.bind(this));
@@ -269,7 +275,7 @@
                     var callback = typeof binding.value === 'function' ? binding.value : (_a = vnode.props) === null || _a === void 0 ? void 0 : _a.onClick;
                     gamepad.addListener(binding.arg, binding.modifiers, callback, vnode);
                 },
-                beforeUnmount: function (el, binding, vnode) {
+                beforeUnmount: function (_el, binding, vnode) {
                     var _a;
                     if (gamepad.validBinding(binding, vnode) !== 2) {
                         return;
@@ -286,7 +292,7 @@
                     }
                     gamepad.createLayer(binding.value, vnode);
                 },
-                unmounted: function (el, binding) {
+                unmounted: function (_el, binding) {
                     if (typeof binding.value === 'undefined') {
                         return;
                     }
