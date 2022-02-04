@@ -20,12 +20,15 @@ export default function(options: VueGamepadOptions = DefaultOptions) {
       /**
        * A gamepad was connected
        */
-      window.addEventListener('gamepadconnected', () => {
+
+      const onConnected = () => {
         document.body.classList.add(`${options.classPrefix}-connected`);
         if (typeof options.onGamepadConnected === 'function') {
           options.onGamepadConnected();
         }
-      });
+      };
+
+      window.addEventListener('gamepadconnected', onConnected);
 
       /**
        * A gamepad was disconnected
@@ -39,6 +42,22 @@ export default function(options: VueGamepadOptions = DefaultOptions) {
           options.onGamepadDisconnected();
         }
       });
+
+      // Chrome does not handle the 'gamepadconnected' event well:
+      // https://stackoverflow.com/a/45341610
+      const isChrome = Boolean((window as any).chrome);
+      if (isChrome) {
+        let previousNumber = 0;
+        setInterval(() => {
+          const gamepads = navigator.getGamepads()
+          if (gamepads.length !== previousNumber) {
+            if (gamepads.length > previousNumber) {
+              onConnected()
+            }
+            previousNumber = gamepads.length
+          }
+        }, 6 * 1000)
+      }
 
       // run!
       requestAnimationFrame(this.update.bind(this));
