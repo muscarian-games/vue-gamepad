@@ -92,12 +92,13 @@
                 this.currentLayer = '';
                 this.prevLayers = {};
                 this.vnodeLayers = {};
-                window.addEventListener('gamepadconnected', function () {
+                var onConnected = function () {
                     document.body.classList.add(options.classPrefix + "-connected");
                     if (typeof options.onGamepadConnected === 'function') {
                         options.onGamepadConnected();
                     }
-                });
+                };
+                window.addEventListener('gamepadconnected', onConnected);
                 window.addEventListener('gamepaddisconnected', function () {
                     var gamepads = _this.getGamepads();
                     if (gamepads.length === 0) {
@@ -107,6 +108,19 @@
                         options.onGamepadDisconnected();
                     }
                 });
+                var isChrome = Boolean(window.chrome);
+                if (isChrome) {
+                    var previousNumber_1 = 0;
+                    setInterval(function () {
+                        var gamepads = navigator.getGamepads();
+                        if (gamepads.length !== previousNumber_1) {
+                            if (gamepads.length > previousNumber_1) {
+                                onConnected();
+                            }
+                            previousNumber_1 = gamepads.length;
+                        }
+                    }, 6 * 1000);
+                }
                 requestAnimationFrame(this.update.bind(this));
             }
             VueGamepad.prototype.getGamepads = function () {
